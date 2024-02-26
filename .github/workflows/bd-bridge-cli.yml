@@ -34,7 +34,9 @@ jobs:
             blackduck.project.id=${{ github.event.repository.name }} \
             blackduck.project.version.id=${{ github.ref_name }} \
             blackduck.scan.failure.severities='BLOCKER' \
-            blackduck.scan.full='true'
+            blackduck.scan.full='true' \
+            blackduck.fixpr.enabled='true' \
+            github.user.token=${{ secrets.GITHUB_TOKEN }}
     - name: Black Duck PR Scan
       if: ${{ github.event_name == 'pull_request' }}
       env:
