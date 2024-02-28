@@ -36,8 +36,8 @@ jobs:
             blackduck.scan.full='true' \
             blackduck.scan.failure.severities='BLOCKER' \
             blackduck.fixpr.enabled='true' \
-            blackduck.reports.sarif.create='true' \
-            blackduck.upload.sarif.report= 'true' \
+            # blackduck.reports.sarif.create='true' \
+            # blackduck.upload.sarif.report= 'true' \
             github.user.token=${{ secrets.GITHUB_TOKEN }}
     - name: Black Duck PR Scan
       if: ${{ github.event_name == 'pull_request' }}
