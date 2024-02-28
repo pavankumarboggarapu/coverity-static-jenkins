@@ -33,10 +33,12 @@ jobs:
             blackduck.token=${{ secrets.BLACKDUCK_API_TOKEN }} \
             blackduck.project.id=${{ github.event.repository.name }} \
             blackduck.project.version.id=${{ github.ref_name }} \
-            blackduck.scan.failure.severities='BLOCKER' \
             blackduck.scan.full='true' \
-            blackduck.fixpr.enabled='true' \
-            github.user.token=${{ secrets.GITHUB_TOKEN }}
+            blackduck.scan.failure.severities='BLOCKER'
+            # blackduck.fixpr.enabled='true' \
+            # blackduck.reports.sarif.create='true' \
+            # blackduck.upload.sarif.report= 'true' \
+            # github.user.token=${{ secrets.GITHUB_TOKEN }}
     - name: Black Duck PR Scan
       if: ${{ github.event_name == 'pull_request' }}
       env:
