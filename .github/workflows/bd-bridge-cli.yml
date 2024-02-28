@@ -37,6 +37,7 @@ jobs:
             blackduck.scan.failure.severities='BLOCKER' \
             blackduck.fixpr.enabled='true' \
             github.repository.branch.name=${{ github.ref_name }} \
+            github.repository.name=${{ github.event.repository.name }} \
             github.repository.owner.name=${{ github.repository_owner }} \
             github.user.token=${{ secrets.GITHUB_TOKEN }}
     - name: Black Duck PR Scan
