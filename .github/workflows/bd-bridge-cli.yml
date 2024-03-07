@@ -37,7 +37,6 @@ jobs:
             blackduck.scan.failure.severities='BLOCKER' \
             blackduck.fixpr.enabled='true' \
             blackduck.reports.sarif.create='true' \
-            blackduck.upload.sarif.report='true' \
             github.repository.owner.name=${{ github.repository_owner }} \
             github.repository.name=${{ github.event.repository.name }} \
             github.repository.branch.name=${{ github.ref_name }}
