@@ -28,8 +28,6 @@ jobs:
         polaris_application_name: chuckaude-${{ github.event.repository.name }}
         polaris_project_name: ${{ github.event.repository.name }}
         polaris_prComment_enabled: 'true'
-        polaris_reports_sarif_create: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
-        polaris_upload_sarif_report: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
 #    - name: Save Logs
 #      if: always()
