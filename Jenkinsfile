@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     status = synopsys_scan product: 'blackduck',
-                        blackduck_automation_prcomment: true
+                        blackduck_automation_prcomment: true,
                         blackduck_reports_sarif_create: true
                     if (status == 8) { unstable 'policy violation' }
                     else if (status != 0) { error 'plugin failure' }
