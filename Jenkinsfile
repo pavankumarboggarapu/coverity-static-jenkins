@@ -31,7 +31,7 @@ pipeline {
                     status = synopsys_scan product: 'blackduck',
                         blackduck_automation_prcomment: true,
                         blackduck_reports_sarif_create: true,
-						mark_build_status: 'UNSTABLE'
+                        mark_build_status: 'UNSTABLE'
                     if (status == 8) { unstable 'policy violation' }
                     else if (status != 0) { error 'plugin failure' }
                 }
