@@ -4,6 +4,7 @@ pipeline {
     agent { label 'linux64' }
     environment {
         REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
+        GITHUB_TOKEN = credentials('github-pat')
     }
     tools {
         maven 'maven-3.9'
@@ -34,7 +35,8 @@ pipeline {
                     polaris_branch_name: "$BRANCH_NAME",
                     polaris_prComment_enabled: true,
                     polaris_reports_sarif_create: true,
-                    mark_build_status: 'UNSTABLE'
+                    mark_build_status: 'UNSTABLE',
+                    github_token: "$GITHUB_TOKEN"
             }
         }
         stage('Deploy') {
