@@ -32,9 +32,9 @@ pipeline {
                     polaris_application_name: "chuckaude-$REPO_NAME",
                     polaris_project_name: "$REPO_NAME",
                     polaris_branch_name: "$BRANCH_NAME",
-					polaris_prComment_enabled: true,
+                    polaris_prComment_enabled: true,
                     polaris_reports_sarif_create: true,
-                    mark_build_status: 'UNSTABLE',
+                    mark_build_status: 'UNSTABLE'
             }
         }
         stage('Deploy') {
