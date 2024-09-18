@@ -4,13 +4,15 @@ pipeline {
     agent { label 'linux64' }
     environment {
         REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
-        //BRIDGECLI_LINUX64 = 'https://sig-repo.synopsys.com/artifactory/bds-integrations-release/com/synopsys/integration/synopsys-bridge/latest/synopsys-bridge-linux64.zip'
-        //BRIDGE_POLARIS_SERVERURL = 'https://poc.polaris.synopsys.com'
-        //BRIDGE_POLARIS_ACCESSTOKEN = credentials('poc.polaris.synopsys.com')
-        //BRIDGE_POLARIS_APPLICATION_NAME = "chuckaude-${env.REPO_NAME}"
-        //BRIDGE_POLARIS_PROJECT_NAME = "${env.REPO_NAME}"
-        //BRIDGE_POLARIS_BRANCH_NAME = "$BRANCH_NAME"
-        //BRIDGE_POLARIS_ASSESSMENT_TYPES = 'SAST,SCA'
+        FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
+        PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
+        BRIDGECLI_LINUX64 = 'https://sig-repo.synopsys.com/artifactory/bds-integrations-release/com/synopsys/integration/synopsys-bridge/latest/synopsys-bridge-linux64.zip'
+        BRIDGE_POLARIS_SERVERURL = 'https://poc.polaris.synopsys.com'
+        BRIDGE_POLARIS_ACCESSTOKEN = credentials('poc.polaris.synopsys.com')
+        BRIDGE_POLARIS_APPLICATION_NAME = "chuckaude-${env.REPO_NAME}"
+        BRIDGE_POLARIS_PROJECT_NAME = "${env.REPO_NAME}"
+        BRIDGE_POLARIS_BRANCH_NAME = "$BRANCH_NAME"
+        BRIDGE_POLARIS_ASSESSMENT_TYPES = 'SAST,SCA'
         GITHUB_TOKEN = credentials('github-pat')
     }
     tools {
@@ -28,7 +30,8 @@ pipeline {
                 sh 'mvn -B package'
             }
         }
-        stage('polaris') {
+/*
+        stage('Polaris') {
             steps {
                 synopsys_scan product: 'polaris',
                     polaris_assessment_types: 'SAST,SCA',
@@ -41,15 +44,15 @@ pipeline {
                     github_token: "$GITHUB_TOKEN"
             }
         }
-/*
+*/
         stage('Polaris Full Scan') {
-            when { not { changeRequest() } }
+            when { environment name: 'FULLSCAN', value: 'true' }
             steps {
                 script {
                     status = sh returnStatus: true, script: '''
                         curl -fLsS -o bridge.zip $BRIDGECLI_LINUX64 && unzip -qo -d $WORKSPACE_TMP bridge.zip && rm -f bridge.zip
                         $WORKSPACE_TMP/synopsys-bridge --verbose --stage polaris \
-                            polaris.reports.sarif.create='true'
+                            polaris.reports.sarif.create=true
                     '''
                     if (status == 8) { unstable 'policy violation' }
                     else if (status != 0) { error 'scan failure' }
@@ -57,8 +60,8 @@ pipeline {
             }
         }
         stage('Polaris PR Scan') {
-                when { changeRequest() }
-                steps {
+            when { environment name: 'PRSCAN', value: 'true' }
+            steps {
                 script {
                     status = sh returnStatus: true, script: '''
                         curl -fLsS -o bridge.zip $BRIDGECLI_LINUX64 && unzip -qo -d $WORKSPACE_TMP bridge.zip && rm -f bridge.zip
@@ -76,7 +79,6 @@ pipeline {
                 }
             }
         }
-*/
     }
     post {
         always {
