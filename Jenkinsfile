@@ -1,4 +1,4 @@
-// example Jenkinsfile for Polaris scans using the Synopsys Security Scan Plugin
+// example Jenkinsfile for Black Duck scans using the Synopsys Security Scan Plugin
 // https://plugins.jenkins.io/synopsys-security-scan
 pipeline {
     agent { label 'linux64' }
@@ -7,12 +7,9 @@ pipeline {
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         BRIDGECLI_LINUX64 = 'https://sig-repo.synopsys.com/artifactory/bds-integrations-release/com/synopsys/integration/synopsys-bridge/latest/synopsys-bridge-linux64.zip'
-        BRIDGE_POLARIS_SERVERURL = 'https://poc.polaris.synopsys.com'
-        BRIDGE_POLARIS_ACCESSTOKEN = credentials('poc.polaris.synopsys.com')
-        BRIDGE_POLARIS_APPLICATION_NAME = "chuckaude-${env.REPO_NAME}"
-        BRIDGE_POLARIS_PROJECT_NAME = "${env.REPO_NAME}"
-        BRIDGE_POLARIS_BRANCH_NAME = "$BRANCH_NAME"
-        BRIDGE_POLARIS_ASSESSMENT_TYPES = 'SAST,SCA'
+        BRIDGE_BLACKDUCK_URL = 'https://poc357.blackduck.synopsys.com'
+        BRIDGE_BLACKDUCK_URL = credentials('poc357.blackduck.synopsys.com')
+        DETECT_PROJECT_NAME = "${env.REPO_NAME}"
         GITHUB_TOKEN = credentials('github-pat')
     }
     tools {
@@ -31,43 +28,47 @@ pipeline {
             }
         }
 /*
-        stage('Polaris') {
+        stage('Black Duck') {
             steps {
-                synopsys_scan product: 'polaris',
-                    polaris_assessment_types: 'SAST,SCA',
-                    polaris_application_name: "chuckaude-$REPO_NAME",
-                    polaris_project_name: "$REPO_NAME",
-                    polaris_branch_name: "$BRANCH_NAME",
-                    polaris_prComment_enabled: true,
-                    polaris_reports_sarif_create: true,
+                synopsys_scan product: 'blackduck',
+                    blackduck_scan_failure_severities: 'BLOCKER',
+                    blackduck_reports_sarif_create: true,
+                    blackduck_automation_prcomment: true,
                     mark_build_status: 'UNSTABLE',
                     github_token: "$GITHUB_TOKEN"
             }
         }
 */
-        stage('Polaris Full Scan') {
+        stage('Black Duck Full Scan') {
             when { environment name: 'FULLSCAN', value: 'true' }
             steps {
                 script {
                     status = sh returnStatus: true, script: '''
                         curl -fLsS -o bridge.zip $BRIDGECLI_LINUX64 && unzip -qo -d $WORKSPACE_TMP bridge.zip && rm -f bridge.zip
-                        $WORKSPACE_TMP/synopsys-bridge --verbose --stage polaris \
-                            polaris.reports.sarif.create=true
+                        $WORKSPACE_TMP/synopsys-bridge --verbose --stage blackduck \
+                            blackduck.scan.full=true \
+                            blackduck.scan.failure.severities='BLOCKER' \
+                            blackduck.fixpr.enabled=true \
+                            blackduck.reports.sarif.create=true \
+                            github.repository.name=$REPO_NAME \
+                            github.repository.branch.name=$BRANCH_NAME \
+                            github.repository.owner.name=chuckaude-org \
+                            github.user.token=$GITHUB_TOKEN
                     '''
                     if (status == 8) { unstable 'policy violation' }
                     else if (status != 0) { error 'scan failure' }
                 }
             }
         }
-        stage('Polaris PR Scan') {
+        stage('Black Duck PR Scan') {
             when { environment name: 'PRSCAN', value: 'true' }
             steps {
                 script {
                     status = sh returnStatus: true, script: '''
                         curl -fLsS -o bridge.zip $BRIDGECLI_LINUX64 && unzip -qo -d $WORKSPACE_TMP bridge.zip && rm -f bridge.zip
-                        $WORKSPACE_TMP/synopsys-bridge --verbose --stage polaris \
-                            polaris.prcomment.enabled=true \
-                            polaris.branch.parent.name=$CHANGE_TARGET \
+                        $WORKSPACE_TMP/synopsys-bridge --verbose --stage blackduck \
+                            blackduck.scan.full=false \
+                            blackduck.automation.prcomment=true \
                             github.repository.name=$REPO_NAME \
                             github.repository.branch.name=$BRANCH_NAME \
                             github.repository.owner.name=chuckaude-org \
@@ -82,7 +83,7 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts allowEmptyArchive: true, artifacts: '.bridge/bridge.log, .bridge/*/idir/build-log.txt, .bridge/*/report.sarif.json'
+            archiveArtifacts allowEmptyArchive: true, artifacts: '.bridge/bridge.log, .bridge/*/report.sarif.json'
             //zip archive: true, dir: '.bridge', zipFile: 'bridge-logs.zip'
             cleanWs()
         }
