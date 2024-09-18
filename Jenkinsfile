@@ -8,7 +8,7 @@ pipeline {
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         BRIDGECLI_LINUX64 = 'https://sig-repo.synopsys.com/artifactory/bds-integrations-release/com/synopsys/integration/synopsys-bridge/latest/synopsys-bridge-linux64.zip'
         BRIDGE_BLACKDUCK_URL = 'https://poc357.blackduck.synopsys.com'
-        BRIDGE_BLACKDUCK_URL = credentials('poc357.blackduck.synopsys.com')
+        BRIDGE_BLACKDUCK_TOKEN = credentials('poc357.blackduck.synopsys.com')
         DETECT_PROJECT_NAME = "${env.REPO_NAME}"
         GITHUB_TOKEN = credentials('github-pat')
     }
