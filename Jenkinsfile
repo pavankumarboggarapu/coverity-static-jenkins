@@ -10,8 +10,8 @@ pipeline {
         BRIDGECLI_LINUX64 = 'https://sig-repo.synopsys.com/artifactory/bds-integrations-release/com/synopsys/integration/synopsys-bridge/latest/synopsys-bridge-linux64.zip'
         BRIDGE_COVERITY_CONNECT_URL = 'https://poc357.coverity.synopsys.com'
         COVERITY_CREDENTIALS = credentials('coverity-committer')
-        BRIDGE_COVERITY_CONNECT_USER_NAME = ${env.COVERITY_CREDENTIALS_USR}
-        BRIDGE_COVERITY_CONNECT_USER_PASSWORD = ${env.COVERITY_CREDENTIALS_PSW}
+        BRIDGE_COVERITY_CONNECT_USER_NAME = "${env.COVERITY_CREDENTIALS_USR}"
+        BRIDGE_COVERITY_CONNECT_USER_PASSWORD = "${env.COVERITY_CREDENTIALS_PSW}"
         GITHUB_TOKEN = credentials('github-pat')
     }
     tools {
