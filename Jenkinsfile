@@ -27,17 +27,17 @@ pipeline {
         }
         stage('Polaris') {
             when {
-				anyOf {
+                anyOf {
                     environment name: 'FULLSCAN', value: 'true'
                     environment name: 'PRSCAN', value: 'true'
                 }
-			}
-			steps {
+            }
+            steps {
                 synopsys_scan product: 'polaris',
                     polaris_assessment_types: 'SAST,SCA',
                     polaris_application_name: "chuckaude-$REPO_NAME",
                     polaris_project_name: "$REPO_NAME",
-                    //polaris_branch_name: "$BRANCH_NAME",
+                    polaris_branch_name: "$BRANCH_NAME",
                     polaris_prComment_enabled: true,
                     polaris_reports_sarif_create: true,
                     mark_build_status: 'UNSTABLE',
