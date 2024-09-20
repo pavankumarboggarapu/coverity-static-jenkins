@@ -26,8 +26,13 @@ pipeline {
             }
         }
         stage('Polaris') {
-            when { expression{env.FULLSCAN == true || env.PRSCAN == true} }
-            steps {
+            when {
+				anyOf {
+                    environment name: 'FULLSCAN', value: 'true'
+                    environment name: 'PRSCAN', value: 'true'
+                }
+			}
+			steps {
                 synopsys_scan product: 'polaris',
                     polaris_assessment_types: 'SAST,SCA',
                     polaris_application_name: "chuckaude-$REPO_NAME",
