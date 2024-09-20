@@ -18,7 +18,7 @@ pipeline {
         stage('Polaris') {
             when {
                 anyOf {
-                    branch 'main'
+                    branch 'develop'
                     branch pattern: "PR-\\d+", comparator: "REGEXP"
                 }
             }
