@@ -27,7 +27,8 @@ pipeline {
                     polaris_assessment_types: 'SCA',
                     polaris_prComment_enabled: true,
                     polaris_application_name: 'chuckaude-hello-java', 
-                    polaris_project_name: 'hello-java'
+                    polaris_project_name: 'hello-java',
+                    polaris_branch_name: "$BRANCH_NAME"
             }
         }
     }
