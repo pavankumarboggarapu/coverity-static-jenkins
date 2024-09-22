@@ -41,14 +41,15 @@ pipeline {
                     polaris_prComment_enabled: true,
                     polaris_reports_sarif_create: true,
                     mark_build_status: 'UNSTABLE',
-                    github_token: "$GITHUB_TOKEN"
+                    github_token: "$GITHUB_TOKEN",
+                    include_diagnostics: true
             }
         }
     }
     post {
         always {
-            archiveArtifacts allowEmptyArchive: true, artifacts: '.bridge/bridge.log, .bridge/*/idir/build-log.txt, .bridge/*/report.sarif.json'
-            //zip archive: true, dir: '.bridge', zipFile: 'bridge-logs.zip'
+            //archiveArtifacts allowEmptyArchive: true, artifacts: '.bridge/bridge.log, .bridge/*/idir/build-log.txt, .bridge/*/report.sarif.json'
+            zip archive: true, dir: '.bridge', zipFile: 'bridge-logs.zip'
             cleanWs()
         }
     }
