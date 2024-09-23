@@ -49,7 +49,7 @@ pipeline {
     post {
         always {
             //archiveArtifacts allowEmptyArchive: true, artifacts: '.bridge/bridge.log, .bridge/*/idir/build-log.txt, .bridge/*/report.sarif.json'
-            zip archive: true, dir: '.bridge', zipFile: 'bridge-logs.zip'
+            //zip archive: true, dir: '.bridge', zipFile: 'bridge-logs.zip'
             cleanWs()
         }
     }
