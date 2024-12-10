@@ -36,7 +36,7 @@ jobs:
         DETECT_CODE_LOCATION_NAME: ${{ github.event.repository.name }}-${{ github.ref_name }}
       run: |
         curl -fLsS -o bridge.zip ${{ vars.BRIDGECLI_LINUX64 }} && unzip -qo -d ${{ runner.temp }} bridge.zip && rm -f bridge.zip
-        ${{ runner.temp }}/bridge-cli --stage blackducksca \
+        ${{ runner.temp }}/bridge-cli-bundle-linux64/bridge-cli --stage blackducksca \
             blackducksca.scan.full='true' \
             blackducksca.scan.failure.severities='BLOCKER' \
             blackducksca.fixpr.enabled='true' \
@@ -49,7 +49,7 @@ jobs:
         DETECT_CODE_LOCATION_NAME: ${{ github.event.repository.name }}-${{ github.base_ref }}
       run: |
         curl -fLsS -o bridge.zip ${{ vars.BRIDGECLI_LINUX64 }} && unzip -qo -d ${{ runner.temp }} bridge.zip && rm -f bridge.zip
-        ${{ runner.temp }}/bridge-cli --stage blackducksca \
+        ${{ runner.temp }}/bridge-cli-bundle-linux64/bridge-cli --stage blackducksca \
             blackducksca.scan.full='false' \
             blackducksca.automation.prcomment='true' \
             github.repository.pull.number=${{ github.event.number }}
