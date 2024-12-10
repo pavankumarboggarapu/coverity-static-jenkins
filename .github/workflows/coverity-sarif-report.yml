@@ -33,7 +33,7 @@ jobs:
         COV_USER: ${{ secrets.COV_USER }}
         COVERITY_PASSPHRASE: ${{ secrets.COVERITY_PASSPHRASE }}
       run: |
-        COVERITY_TOOL_HOME=$HOME/.synopsys/bridge/tools/cov-analysis/*
+        COVERITY_TOOL_HOME=$HOME/.blackduck/bridge/tools/cov-analysis/*
         IDIR=$(find ${{ github.workspace }}/.bridge -name idir)
         $COVERITY_TOOL_HOME/bin/cov-format-errors --dir "$IDIR" --json-output-v10 issues.json
         $COVERITY_TOOL_HOME/node/bin/node $COVERITY_TOOL_HOME/SARIF/cov-format-sarif-for-github.js --inputFile issues.json --outputFile results.sarif \
