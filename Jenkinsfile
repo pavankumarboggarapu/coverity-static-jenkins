@@ -36,6 +36,7 @@ pipeline {
             }
             steps {
                 security_scan product: 'coverity',
+                    coverity_url: 'https://coverity.field-test.blackduck.com',
                     coverity_project_name: "$REPO_NAME",
                     coverity_stream_name: "$REPO_NAME-$BRANCH_NAME",
                     coverity_args: "-o commit.connect.description=$BUILD_TAG",
@@ -73,13 +74,10 @@ pipeline {
                     url: "$SRM_URL",
                     selfSignedCertificateFingerprint: '',
                     keyCredentialId: 'srm.field-test.blackduck.com',
-                    project: [$class: 'NamedProject', projectName: "chuckaude-$REPO_NAME", autoCreate: true],
+                    project: [$class: 'NamedProject', projectName: "$REPO_NAME", autoCreate: true],
                     baseBranchName: 'main',
                     targetBranchName: "$BRANCH_NAME",
-                    // no option to only use analysis import, see ER CDX-1700
                     sourceAndBinaryFiles: '**',
-                    // include then exclude everything workaround no longer works
-                    //excludedSourceAndBinaryFiles: '**',
                     analysisName: "Build [#$BUILD_TAG]($BUILD_URL)",
                     analysisResultConfiguration: [
                         policyBreakBuildBehavior: 'MarkUnstable',
