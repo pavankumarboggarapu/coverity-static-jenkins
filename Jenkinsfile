@@ -41,6 +41,8 @@ pipeline {
                     coverity_args: "-o commit.connect.description=$BUILD_TAG",
                     coverity_policy_view: 'Outstanding Issues',
                     coverity_prComment_enabled: true,
+                    coverity_local: true,
+                    coverity_install_directory: "$COVERITY_TOOL_HOME"
                     mark_build_status: 'UNSTABLE',
                     github_token: "$GITHUB_TOKEN",
                     include_diagnostics: false
