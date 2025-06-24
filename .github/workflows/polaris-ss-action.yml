@@ -3,9 +3,7 @@
 name: polaris-ss-action
 on:
   push:
-    branches: [ main, master, develop, stage, release ]
-  pull_request:
-    branches: [ main, master, develop, stage, release ]
+    branches: [stage]
   workflow_dispatch:
 jobs:
   polaris:
