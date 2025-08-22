@@ -2,6 +2,10 @@
 // https://plugins.jenkins.io/blackduck-security-scan
 pipeline {
     agent any
+    parameters {
+    booleanParam(name: 'FULLSCAN', defaultValue: false, description: 'Run full Coverity scan')
+    booleanParam(name: 'PRSCAN', defaultValue: false, description: 'Run Coverity scan for PR')
+    }
     environment {
         REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
