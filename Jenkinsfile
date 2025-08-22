@@ -3,7 +3,7 @@
 pipeline {
     agent any
     parameters {
-    booleanParam(name: 'FULLSCAN', defaultValue: false, description: 'Run full Coverity scan')
+    booleanParam(name: 'FULLSCAN', defaultValue: true, description: 'Run full Coverity scan')
     booleanParam(name: 'PRSCAN', defaultValue: false, description: 'Run Coverity scan for PR')
     }
     environment {
