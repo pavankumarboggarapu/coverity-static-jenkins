@@ -1,12 +1,12 @@
 // example Jenkinsfile for Coverity scans using the Black Duck Security Scan Plugin
 // https://plugins.jenkins.io/blackduck-security-scan
 pipeline {
-    agent any
+    agent { label 'linux64' }
     environment {
         REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
-        GITHUB_TOKEN = credentials('github-pkumarcoverity')
+        GITHUB_TOKEN = credentials('github-pat')
     }
     tools {
         maven 'maven-3'
