@@ -6,7 +6,7 @@ pipeline {
         REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
-        GITHUB_TOKEN = credentials('github-pat')
+        GITHUB_TOKEN = credentials('github-pkumarcoverity')
     }
     tools {
         maven 'maven-3'
