@@ -10,7 +10,7 @@ pipeline {
     }
     tools {
         maven 'maven-3'
-        jdk 'openjdk-21'
+        jdk 'openjdk-17'
     }
     stages {
         stage('Build') {
