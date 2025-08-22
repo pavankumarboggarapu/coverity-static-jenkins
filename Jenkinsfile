@@ -17,13 +17,21 @@ pipeline {
         jdk 'openjdk-21'
     }
     stages {
+        stage('Init') {
+            steps {
+               script {
+                   env.BRANCH_NAME = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
+                   echo "Detected branch: ${env.BRANCH_NAME}"
+                 }
+             }
+        }
         stage('Debug') {
             steps {
                 echo "BRANCH_NAME: ${env.BRANCH_NAME}"
                 echo "CHANGE_TARGET: ${env.CHANGE_TARGET}"
                 echo "FULLSCAN param: ${params.FULLSCAN}"
                 echo "PRSCAN param: ${params.PRSCAN}"
-            }
+            }   
         }
         stage('Build') {
             steps {
