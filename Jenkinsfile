@@ -40,6 +40,7 @@ pipeline {
                     coverity_stream_name: "${env.REPO_NAME}-${env.BRANCH_NAME}",
                     coverity_args: "-o commit.connect.description=${env.BUILD_TAG}",
                     coverity_policy_view: 'Outstanding Issues',
+                    coverity_local: true
                     coverity_prComment_enabled: true,
                     mark_build_status: 'UNSTABLE',
                     github_token: "${env.GITHUB_TOKEN}",
