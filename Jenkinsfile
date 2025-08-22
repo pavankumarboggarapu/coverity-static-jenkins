@@ -1,7 +1,7 @@
 // example Jenkinsfile for Coverity scans using the Black Duck Security Scan Plugin
 // https://plugins.jenkins.io/blackduck-security-scan
 pipeline {
-    agent { label 'linux64' }
+    agent any
     environment {
         REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
