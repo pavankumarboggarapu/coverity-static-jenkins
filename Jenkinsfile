@@ -17,6 +17,14 @@ pipeline {
         jdk 'openjdk-21'
     }
     stages {
+        stage('Debug') {
+            steps {
+                echo "BRANCH_NAME: ${env.BRANCH_NAME}"
+                echo "CHANGE_TARGET: ${env.CHANGE_TARGET}"
+                echo "FULLSCAN param: ${params.FULLSCAN}"
+                echo "PRSCAN param: ${params.PRSCAN}"
+            }
+        }
         stage('Build') {
             steps {
                 sh 'mvn -B package'
@@ -25,8 +33,8 @@ pipeline {
         stage('Coverity') {
             when {
                 anyOf {
-                    environment name: 'FULLSCAN', value: 'true'
-                    environment name: 'PRSCAN', value: 'true'
+                    expression { return env.FULLSCAN == 'true' }
+                    expression { return env.PRSCAN == 'true' }
                 }
             }
             steps {
