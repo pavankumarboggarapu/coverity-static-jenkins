@@ -2,10 +2,6 @@
 // https://plugins.jenkins.io/blackduck-security-scan
 pipeline {
     agent any
-    parameters {
-    booleanParam(name: 'FULLSCAN', defaultValue: false, description: 'Run full Coverity scan')
-    booleanParam(name: 'PRSCAN', defaultValue: false, description: 'Run Coverity scan for PR')
-    }
     environment {
         REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
@@ -17,34 +13,12 @@ pipeline {
         jdk 'openjdk-21'
     }
     stages {
-        stage('Init') {
-            steps {
-               script {
-                   env.BRANCH_NAME = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
-                   echo "Detected branch: ${env.BRANCH_NAME}"
-                 }
-             }
-        }
-        stage('Debug') {
-            steps {
-                echo "BRANCH_NAME: ${env.BRANCH_NAME}"
-                echo "CHANGE_TARGET: ${env.CHANGE_TARGET}"
-                echo "FULLSCAN param: ${params.FULLSCAN}"
-                echo "PRSCAN param: ${params.PRSCAN}"
-            }   
-        }
         stage('Build') {
             steps {
                 sh 'mvn -B package'
             }
         }
         stage('Coverity') {
-            when {
-                anyOf {
-                    expression { return env.FULLSCAN == 'true' }
-                    expression { return env.PRSCAN == 'true' }
-                }
-            }
             steps {
                 security_scan product: 'coverity',
                     coverity_project_name: "$REPO_NAME",
